@@ -1,13 +1,20 @@
 package main
 
+import (
+	"log"
+	"log/slog"
+	"url-shortener/internal/config"
+	"url-shortener/internal/pkg/logger"
+)
+
 func main() {
-	// TODO: init config
+	cfg, err := config.Load()
+	if err != nil {
+		log.Fatalf("Failed to load config: %s", err.Error())
+	}
 
-	// TODO: init logger
+	slogger := logger.New(cfg.LogLevel)
+	slog.SetDefault(slogger)
 
-	// TODO: init db
-
-	// TODO: init router
-
-	// TODO: init server
+	slog.Info("starting url-shortener")
 }
