@@ -1,8 +1,17 @@
 .env
+.env.*
+!.env.example
 
 .idea/
 .vscode/
 
 /bin/
+/dist/
+/tmp/
+/coverage/
+
 *.exe
 *.out
+*.test
+*.log
+coverage.out
