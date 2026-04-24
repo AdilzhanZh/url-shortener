@@ -23,6 +23,11 @@ func main() {
 	slog.Info("starting url-shortener")
 
 	r := gin.New()
+	r.GET("/health", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"status": "ok",
+		})
+	})
 	srv := server.New(r, cfg.Port)
 
 	err = srv.Run()
