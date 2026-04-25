@@ -22,9 +22,6 @@ COPY --from=builder /out/api /app/api
 COPY --from=builder /go/bin/migrate /usr/local/bin/migrate
 COPY migrations /app/migrations
 
-# The app currently expects .env to exist even when all variables are injected by docker-compose.
-RUN touch /app/.env
-
 EXPOSE 8080
 
 CMD ["./api"]
