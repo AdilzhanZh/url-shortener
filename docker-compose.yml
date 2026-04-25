@@ -43,6 +43,10 @@ services:
     command: >
       sh -c "
         echo 'Running migrations...' &&
+        echo 'DB_HOST: '$$DB_HOST &&
+        echo 'DB_PORT: '$$DB_PORT &&
+        echo 'DB_USER: '$$DB_USER &&
+        echo 'DB_NAME: '$$DB_NAME &&
         migrate -path /app/migrations -database \"postgres://$${DB_USER}:$${DB_PASSWORD}@$${DB_HOST}:$${DB_PORT}/$${DB_NAME}?sslmode=$${SSL_MODE}\" up &&
         echo 'Starting application...' &&
         ./api
