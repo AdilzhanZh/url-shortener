@@ -7,5 +7,3 @@ CREATE TABLE urls (
                       expires_at TIMESTAMP NULL,
                       clicks BIGINT NOT NULL DEFAULT 0
 );
-
-CREATE INDEX idx_urls_short_code ON urls(short_code);
