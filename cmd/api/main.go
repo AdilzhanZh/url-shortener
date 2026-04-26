@@ -24,9 +24,9 @@ func main() {
 	slogger := logger.New(cfg.LogLevel)
 	slog.SetDefault(slogger)
 
-	db, err := repository.NewPostgresDB(cfg)
-	if err != nil {
-		slog.Error("failed to connect postgres", "error", err.Error())
+	db, err2 := repository.NewPostgresDB(cfg)
+	if err2 != nil {
+		slog.Error("failed to connect postgres", "error", err2.Error())
 		os.Exit(1)
 	}
 	defer func() {
