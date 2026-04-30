@@ -11,8 +11,6 @@ import (
 	"url-shortener/internal/repository"
 	"url-shortener/internal/server"
 	"url-shortener/internal/service"
-
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -39,15 +37,10 @@ func main() {
 	urlService := service.NewURLService(urlRepo)
 	urlHandler := handler.NewURLHandler(urlService)
 
-	r := gin.New()
-	r.Use(gin.Logger(), gin.Recovery())
-
-	r.GET("/health", func(c *gin.Context) {
-		c.JSON(200, gin.H{"status": "ok"})
-	})
-
-	r.POST("/api/shorten", urlHandler.Shorten)
-	r.GET("/:code", urlHandler.Redirect)
+	r, err3 := urlHandler.InitRouts()
+	if err3 != nil {
+		slog.Error("failed on InitRouts() function")
+	}
 
 	srv := server.New(r, cfg.Port)
 
