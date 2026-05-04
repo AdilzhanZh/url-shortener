@@ -12,9 +12,3 @@ type URL struct {
 	UpdatedAt time.Time  `db:"updated_at" json:"updated_at"`
 	ExpiresAt *time.Time `db:"expires_at" json:"expires_at,omitempty"`
 }
-
-type CreateURL struct {
-	OriginalURL string     `json:"original_url" binding:"required"`
-	CustomCode  string     `json:"custom_code,omitempty"`
-	ExpiresAt   *time.Time `json:"expires_at,omitempty"`
-}

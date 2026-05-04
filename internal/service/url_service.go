@@ -8,15 +8,10 @@ import (
 	"math/big"
 	"net/url"
 	"time"
+	"url-shortener/internal/pkg/error_pkg"
 
 	"url-shortener/internal/model"
 	"url-shortener/internal/repository"
-)
-
-var (
-	ErrInvalidURL = errors.New("invalid url")
-	ErrNotFound   = errors.New("url not found")
-	ErrExpired    = errors.New("url expired")
 )
 
 type URLService struct {
@@ -29,12 +24,12 @@ func NewURLService(repo repository.UrlRepo) *URLService {
 	}
 }
 
-func (s *URLService) Shorten(ctx context.Context, req model.CreateURL) (*model.URL, error) {
+func (s *URLService) Shorten(ctx context.Context, req model.URL) (*model.URL, error) {
 	if !isValidURL(req.OriginalURL) {
-		return nil, ErrInvalidURL
+		return nil, error_pkg.ErrInvalidURL
 	}
 
-	shortCode := req.CustomCode
+	shortCode := req.ShortCode
 	if shortCode == "" {
 		code, err := generateShortCode(6)
 		if err != nil {
@@ -47,11 +42,14 @@ func (s *URLService) Shorten(ctx context.Context, req model.CreateURL) (*model.U
 	item := &model.URL{
 		OriginalURL: req.OriginalURL,
 		ShortCode:   shortCode,
-		ExpiresAt:   req.ExpiresAt,
 	}
 
 	if err := s.repo.Create(ctx, item); err != nil {
 		return nil, err
+	}
+
+	if err2 := s.repo.SetExpirationDate(ctx, item.ShortCode); err2 != nil {
+		return nil, err2
 	}
 
 	return item, nil
@@ -61,17 +59,17 @@ func (s *URLService) Resolve(ctx context.Context, code string) (string, error) {
 	item, err := s.repo.GetByShortCode(ctx, code)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return "", ErrNotFound
+			return "", error_pkg.ErrNotFound
 		}
 
 		return "", err
 	}
 
 	if item.ExpiresAt != nil && item.ExpiresAt.Before(time.Now()) {
-		return "", ErrExpired
+		return "", error_pkg.ErrExpired
 	}
 
-	if err := s.repo.IncrementClicks(ctx, code); err != nil {
+	if err = s.repo.IncrementClicks(ctx, code); err != nil {
 		return "", err
 	}
 

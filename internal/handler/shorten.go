@@ -8,7 +8,7 @@ import (
 )
 
 func (h *URLHandler) Shorten(c *gin.Context) {
-	var req model.CreateURL
+	var req model.URL
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
