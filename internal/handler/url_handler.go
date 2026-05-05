@@ -17,7 +17,7 @@ func NewURLHandler(s *service.URLService) *URLHandler {
 	}
 }
 
-func (h *URLHandler) InitRouts() (*gin.Engine, error) {
+func (h *URLHandler) InitRoutes() (*gin.Engine, error) {
 	r := gin.New()
 	r.Use(gin.Logger(), gin.Recovery())
 

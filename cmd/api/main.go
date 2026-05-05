@@ -37,9 +37,9 @@ func main() {
 	urlService := service.NewURLService(urlRepo)
 	urlHandler := handler.NewURLHandler(urlService)
 
-	r, err3 := urlHandler.InitRouts()
+	r, err3 := urlHandler.InitRoutes()
 	if err3 != nil {
-		slog.Error("failed on InitRouts() function")
+		slog.Error("failed on InitRoutes() function")
 	}
 
 	srv := server.New(r, cfg.Port)
