@@ -67,9 +67,9 @@ func (s *URLService) Resolve(ctx context.Context, code string) (string, error) {
 
 	if item.ExpiresAt != nil && item.ExpiresAt.Before(time.Now()) {
 		if err = s.repo.DeleteExpiredURL(ctx, code); err != nil {
-			return "", error_pkg.ErrExpired
+			return "", err
 		}
-		return "", error_pkg.ErrNotFound
+		return "", error_pkg.ErrExpired
 	}
 
 	if err = s.repo.IncrementClicks(ctx, code); err != nil {
