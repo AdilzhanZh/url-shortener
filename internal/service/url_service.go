@@ -45,7 +45,7 @@ func (s *URLService) Shorten(ctx context.Context, req model.URL) (*model.URL, er
 	}
 
 	if err := s.repo.Create(ctx, item); err != nil {
-		return nil, err
+		return nil, error_pkg.ErrDuplicateShortCode
 	}
 
 	if err2 := s.repo.SetExpirationDate(ctx, item.ShortCode); err2 != nil {
