@@ -194,3 +194,5 @@ The `urls` table stores:
 - Click count
 
 New links are assigned an expiration date of 7 days after creation.
+
+# Created by Adilzhan Zhanabil
