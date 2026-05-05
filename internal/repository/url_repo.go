@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"log/slog"
 	"url-shortener/internal/model"
 
 	"github.com/jmoiron/sqlx"
@@ -13,6 +14,7 @@ type UrlRepo interface {
 	GetByShortCode(ctx context.Context, code string) (*model.URL, error)
 	IncrementClicks(ctx context.Context, code string) error
 	SetExpirationDate(ctx context.Context, code string) error
+	DeleteExpiredURL(ctx context.Context, code string) error
 }
 
 type PsgURLRepo struct {
@@ -107,5 +109,23 @@ func (r *PsgURLRepo) SetExpirationDate(ctx context.Context, code string) error {
 		return sql.ErrNoRows
 	}
 
+	return nil
+}
+
+func (r *PsgURLRepo) DeleteExpiredURL(ctx context.Context, code string) error {
+	query := `
+		DELETE FROM urls 
+		WHERE expires_at < NOW() AND short_code = $1
+	`
+	result, err := r.db.ExecContext(ctx, query, code)
+	if err != nil {
+		return err
+	}
+
+	rows, err2 := result.RowsAffected()
+	if err2 != nil {
+		return err2
+	}
+	slog.Info("Delete operation completed", "rows_affected", rows)
 	return nil
 }
