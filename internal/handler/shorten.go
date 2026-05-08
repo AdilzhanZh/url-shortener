@@ -28,7 +28,7 @@ func (h *URLHandler) Shorten(c *gin.Context) {
 	}
 
 	shortURL := scheme + "://" + baseURL + "/" + result.ShortCode
-	c.JSON(http.StatusOK, gin.H{
+	c.JSON(http.StatusCreated, gin.H{
 		"short_url": shortURL,
 	})
 }
