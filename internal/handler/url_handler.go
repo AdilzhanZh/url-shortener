@@ -18,8 +18,7 @@ func NewURLHandler(s *service.URLService) *URLHandler {
 }
 
 func (h *URLHandler) InitRoutes() (*gin.Engine, error) {
-	r := gin.New()
-	r.Use(gin.Logger(), gin.Recovery())
+	r := gin.Default()
 
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"status": "ok"})
